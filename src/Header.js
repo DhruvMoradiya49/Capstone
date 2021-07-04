@@ -3,9 +3,10 @@ import './Header.css';
 import SearchIcon from '@material-ui/icons/Search';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { Link } from "react-router-dom";
-// import { useStateValue } from './StateProvider';
+import { useStateValue } from './StateProvider';
 
 class Header extends React.Component {
+    [{ user }, dispatch] = useStateValue();
 
     render(){
         return (
@@ -19,10 +20,12 @@ class Header extends React.Component {
                 </div>
 
                 <div className="header_nav">
-                    <div className="header_option">
-                    <span className="header_optionLineOne">Hello Guest</span> 
-                    <span className="header_optionLineTwo">Sign In</span> 
-                    </div>
+                    <Link to='/login'>
+                        <div className="header_option">
+                            <span className="header_optionLineOne">Hello Guest</span> 
+                            <span className="header_optionLineTwo">{user ? 'Sign Out' : 'Sign In'}</span> 
+                        </div>
+                    </Link>
 
                     <div className="header_option">
                     <span className="header_optionLineOne">Returns</span> 
