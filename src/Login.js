@@ -1,40 +1,66 @@
 import React, { useState } from 'react';
 import "./Login.css";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { auth } from "./firebase";
+import {message} from 'antd'
+import Axios from 'axios';
+import constants from './constants';
+import {Input,Form} from 'antd'
 
-function Login() {
-    const history = useHistory();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    
-    const signIn = e => {
-        e.preventDefault();
+class Login extends React.Component {
+    state={
+        username:'',
+        email:'',
+        password:'',
+        registerEmail:'',
+        registerPassword:'',
+        register:false,
+    }    
 
-        auth
-            .signInWithEmailAndPassword(email,password)
-            .then(auth => {
-                history.push('/')
+    signIn = () => {
+        Axios.post(constants.url.login, {
+            identifier: this.state.email,
+            password: this.state.password,
+        }).then((res) => {
+            window.localStorage.setItem("user", JSON.stringify(res.data.user))
+            window.localStorage.setItem("token", JSON.stringify(res.data.jwt))
+            this.props.history.push("/")
+            this.setState({
+                email:'',
+                username:'',
+                password:'',
             })
-            .catch(error => alert(error.message))
+        }).catch((err) => {
+            if (err) {
+                message.error("Wrong Username & Password !")
+            }
+        })
     }
 
-    const register = e => {
-        e.preventDefault();
-
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((auth) => {
-                // it successfully created a new user with email and password
-                console.log(auth);
-                if (auth) {
-                    history.push('/');
-                }
+    register=()=>{
+        Axios.post(constants.url.register, {
+            email: this.state.registerEmail,
+            password: this.state.registerPassword,
+            username:this.state.username,
+            blocked:false,
+            confirmed:true
+        }).then((response) => {
+            if (response.data.length === 0) {
+                message.error("Somthing went wrong")
+            } else {
+                message.success('Record successfully added')
+            }
+            this.setState({
+                email:'',
+                username:'',
+                password:'',
+                register:false
             })
+        })
 
-            .catch(error => alert(error.message))
     }
 
+    render(){
     return (
         <div className="login">
             <Link to='/'>
@@ -43,22 +69,90 @@ function Login() {
 
             <div className="login_container">
                 <h1>Sign In</h1>
-                <form action="">
+                {this.state.register?(
+                    <Form onFinish={this.register}>
+                        <h5>Your name</h5>
+                        <Form.Item 
+                            rules={[
+                                {
+                                    required:true,
+                                    message:"Email is require!"
+                                },
+                                {
+                                    type:'text',
+                                    message:"Email is invalid!"
+                                }
+                            ]}
+                        >
+                            <Input type="text" value={this.state.username} onChange={e => this.setState({username:e.target.value})} />
+                        </Form.Item>
+                        <h5>E-mail</h5>
+                        <Form.Item 
+                            rules={[
+                                {
+                                    required:true,
+                                    message:"Email is require!"
+                                },
+                                {
+                                    type:'email',
+                                    message:"Email is invalid!"
+                                }
+                            ]}
+                        >
+                            <Input type="email" value={this.state.registerEmail} onChange={e => this.setState({registerEmail:e.target.value})} />
+                        </Form.Item>
+                        <h5>password</h5>
+                        <Form.Item
+                            rules={[
+                                {
+                                    required:true,
+                                    message:"Password is require!"
+                                }
+                            ]}
+                        >
+                            <Input type="password" value={this.state.registerPassword} onChange={e => this.setState({registerPassword:e.target.value})}/>
+                        </Form.Item>
+                        <button className="login_signInButton">Register</button>
+                    </Form>
+                ):(
+                <Form onFinish={this.signIn}>
                     <h5>E-mail</h5>
-                    <input type="text" value={email} onChange={e => setEmail(e.target.value)} />
-
+                    <Form.Item 
+                        rules={[
+                            {
+                                required:true,
+                                message:"Email is require!"
+                            },
+                            {
+                                type:'email',
+                                message:"Email is invalid!"
+                            }
+                        ]}
+                    >
+                        <Input type="email" value={this.state.email} onChange={e => this.setState({email:e.target.value})} />
+                    </Form.Item>
                     <h5>password</h5>
-                    <input type="password" value={password} onChange={e => setPassword(e.target.value)}/>
-
-                    <button type="submit" onClick={signIn} className="login_signInButton">Sign In</button>
-                </form>
+                    <Form.Item
+                        rules={[
+                            {
+                                required:true,
+                                message:"Password is require!"
+                            }
+                        ]}
+                    >
+                        <Input type="password" value={this.state.password} onChange={e => this.setState({password:e.target.value})}/>
+                    </Form.Item>
+                    <button className="login_signInButton">Sign In</button>
+                </Form>
+                )}
                 <p>
                     By signing-in you agree to Mobiant's Conditions of Use & Sale.Please see our Privacy Notice, our Cookies Notice and out Interest-Based Ads
                 </p>
-                <button onClick={register} className="login_registerButton">Create your Mobiant Account</button>
+                <button className="login_registerButton" onClick={()=>this.setState({register:!this.state.register})}>{!this.state.register?"Create your Mobiant Account":"Already have an account? Login"}</button>
             </div>
         </div>
     )
+    }
 }
 
 export default Login
