@@ -49,6 +49,9 @@ class Login extends React.Component {
                 message.error("Somthing went wrong")
             } else {
                 message.success('Record successfully added')
+                Axios.post(constants.url.carts,{
+                    user:response.data.id
+                })
             }
             this.setState({
                 email:'',
@@ -68,7 +71,7 @@ class Login extends React.Component {
             </Link>
 
             <div className="login_container">
-                <h1>Sign In</h1>
+                <h1>Sign {this.state.register?"Up":'In'}</h1>
                 {this.state.register?(
                     <Form onFinish={this.register}>
                         <h5>Your name</h5>

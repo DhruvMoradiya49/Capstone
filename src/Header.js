@@ -3,8 +3,14 @@ import './Header.css';
 import SearchIcon from '@material-ui/icons/Search';
 import AddShoppingCartIcon from '@material-ui/icons/AddShoppingCart';
 import { Link } from "react-router-dom";
+import {Popover} from 'antd'
 
 class Header extends React.Component {
+    logout=()=>{
+        window.localStorage.removeItem('user')
+        window.localStorage.removeItem('token')
+        this.props.history.push('/login')
+    }
     render(){
         return (
             <div className="header">
@@ -19,7 +25,11 @@ class Header extends React.Component {
                 <div className="header_nav">
                     <Link to='/login'>
                         <div className="header_option">
-                            <span className="header_optionLineOne">Hello {JSON.parse(window.localStorage.getItem('user')).username}</span> 
+                            <span className="header_optionLineOne">
+                                <Popover content={(<div style={{cursor:'pointer'}} onClick={()=>this.logout()}>Logout</div>)}>
+                                    Hello {window.localStorage.getItem('user')?JSON.parse(window.localStorage.getItem('user')).username:'Guest'}
+                                </Popover>
+                            </span> 
                             <span className="header_optionLineTwo"></span> 
                         </div>
                     </Link>

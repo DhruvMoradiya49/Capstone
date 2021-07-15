@@ -3,6 +3,8 @@ import "./Home.css";
 import Header from './Header';
 import Product from "./Product";
 import {message} from 'antd'
+import Axios from 'axios';
+import constants from './constants';
 
 class Home extends React.Component {
     state={
@@ -23,6 +25,9 @@ class Home extends React.Component {
         window.localStorage.setItem('productInCart',JSON.stringify(addedProductToCart))
         this.setState({addedProductToCart})
         message.success('Your selected item is successfully added in cart!');
+        Axios.post(constants.url.carts,{
+            user:JSON.parse(window.localStorage.getItem('user')).id
+        })
     }
     // addProduct=()=>{
     //     let product_data=[]
@@ -36,7 +41,7 @@ class Home extends React.Component {
     render(){
         return (
             <React.Fragment>
-                <Header searchText={this.state.searchText} setSearchText={(data)=>this.setState({searchText:data})} cartCount={this.state.addedProductToCart.length} />
+                <Header {...this.props} searchText={this.state.searchText} setSearchText={(data)=>this.setState({searchText:data})} cartCount={this.state.addedProductToCart.length} />
                 <div className="home">
                     <div className="home_container">
                         <img className="home_image" src="Images/header.png" alt="header_image" />

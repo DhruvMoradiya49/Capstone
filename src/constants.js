@@ -5,6 +5,8 @@ const constants = {
         users: `${host}/users`,
         login: `${host}/auth/local`,
         register: `${host}/auth/local/register`,
+        carts:`${host}/carts`,
+        cart_items:`${host}/cart-items`,
     },
 }
 
