@@ -26,11 +26,17 @@ class Header extends React.Component {
                     <Link to='/login'>
                         <div className="header_option">
                             <span className="header_optionLineOne">
-                                <Popover content={(<div style={{cursor:'pointer'}} onClick={()=>this.logout()}>Logout</div>)}>
-                                    Hello {window.localStorage.getItem('user')?JSON.parse(window.localStorage.getItem('user')).username:'Guest'}
-                                </Popover>
+                            Hello
                             </span> 
-                            <span className="header_optionLineTwo"></span> 
+                            <span className="header_optionLineTwo">
+                                {window.localStorage.getItem('user')?(
+                                <Popover content={(<div style={{cursor:'pointer'}} onClick={()=>this.logout()}>Logout</div>)}>
+                                     {JSON.parse(window.localStorage.getItem('user')).username}
+                                </Popover>
+                                ):(
+                                    <span>Guest</span>
+                                )}
+                            </span> 
                         </div>
                     </Link>
 
