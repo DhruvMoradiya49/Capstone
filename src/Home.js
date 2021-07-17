@@ -14,6 +14,10 @@ class Home extends React.Component {
         cartData:[]
     }
     componentDidMount(){
+        this.getProductAndCart()
+    }
+
+    getProductAndCart=()=>{
         fetch('https://fakestoreapi.com/products')
             .then(res=>res.json())
             .then(json=>{
@@ -48,9 +52,9 @@ class Home extends React.Component {
             user:JSON.parse(window.localStorage.getItem('user')).id
         }).then((res)=>{
             console.log(res);
+            this.getProductAndCart()
+            message.success(`${data.title} is added in Cart!`)
         })
-        console.log(product_data);
-        
     }
     render(){
         return (
