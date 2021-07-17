@@ -3,6 +3,8 @@ import Subtotal from './Subtotal';
 import "./Checkout.css";
 import Header from './Header';
 import {message} from 'antd';
+import Axios from 'axios';
+import constants from './constants';
 
 class Checkout extends React.Component {
     state={
@@ -10,42 +12,60 @@ class Checkout extends React.Component {
         totalAmount:0
     }
     componentDidMount(){
-        let cartItem=JSON.parse(window.localStorage.getItem('productInCart'))
         // if(cartItemId){
-            let totalAmount=0
+            
         //     fetch('https://fakestoreapi.com/products')
         //     .then(res=>res.json())
         //     .then(json=>{
         //         let cartItem=json.filter((d)=>cartItemId.includes(d.id))
-                this.setState({cartItem})
-                for(const item of cartItem){
-                    const total = Number(item.price)
+                
+        //     })
+        // }
+        this.getCartData()
+    }
+    getCartData=()=>{
+        Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
+        .then((response)=>{
+            if(response.data){
+                let totalAmount=0
+                this.setState({cartItem:response.data})
+                for(const item of response.data){
+                    const total = Number(item.products.price)
                     totalAmount = totalAmount + total
                 }
                 this.setState({ totalAmount })
-        //     })
-        // }
+            }
+        })
     }
     clearCart=()=>{
-        window.localStorage.removeItem('productInCart')
-        this.setState({cartItem:[]})
-        message.success('Your cart is successfully cleared!');
+        for(const data of this.state.cartItem){
+            Axios.delete(constants.url.cart_items+"/"+data.id)
+            .then((res)=>{
+                message.success('Your cart is successfully cleared!');
+                this.getCartData()
+            })
+        }
     }
     removeItem=(id)=>{
-        let cartItem=this.state.cartItem.filter((d)=>d.id!=id)
-        this.setState({cartItem})
-        let totalAmount=0
-        for(const item of cartItem){
-            const total = Number(item.price)
-            totalAmount = totalAmount + total
-        }
-        this.setState({ totalAmount })
-        window.localStorage.setItem('productInCart',JSON.stringify(cartItem))
+        Axios.delete(constants.url.cart_items+"/"+id)
+        .then((res)=>{
+            message.success('Your cart is successfully cleared!');
+            this.getCartData()
+        })
+        // let cartItem=this.state.cartItem.filter((d)=>d.id!=id)
+        // this.setState({cartItem})
+        // let totalAmount=0
+        // for(const item of cartItem){
+        //     const total = Number(item.price)
+        //     totalAmount = totalAmount + total
+        // }
+        // this.setState({ totalAmount })
+        // window.localStorage.setItem('productInCart',JSON.stringify(cartItem))
     }
     render(){
         return (
             <React.Fragment>
-                <Header cartCount={this.state.cartItem.length} />
+                <Header {...this.props} cartCount={this.state.cartItem.length} />
                 <div className="checkout">
                     <div className="checkout_left">
                         <img className="checkout_ad" 
@@ -57,12 +77,12 @@ class Checkout extends React.Component {
                         </div>
                         {this.state.cartItem.map((data,index)=>(
                             <div className = 'checkoutProduct' key={index}>
-                                <img className="checkoutProduct_image" src={data.image} />
+                                <img className="checkoutProduct_image" src={data.products.image} />
                                 <div className="checkoutProduct_info">
-                                    <p className="checkoutProduct_title">{data.title}</p>
+                                    <p className="checkoutProduct_title">{data.products.title}</p>
                                     <p className="checkoutProduct_price">
                                         <small>$</small>
-                                        <strong>{data.price}</strong>
+                                        <strong>{data.products.price}</strong>
                                     </p>
                                     <button style={{cursor:'pointer'}} onClick={()=>this.removeItem(data.id)}>Remove from Cart</button>
                                 </div>

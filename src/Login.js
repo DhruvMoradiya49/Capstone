@@ -49,8 +49,9 @@ class Login extends React.Component {
                 message.error("Somthing went wrong")
             } else {
                 message.success('Record successfully added')
-                Axios.post(constants.url.carts,{
-                    user:response.data.id
+                Axios.post(constants.url.cart_items,{
+                    user:response.data.id,
+                    products:[]
                 })
             }
             this.setState({

@@ -10,7 +10,8 @@ class Home extends React.Component {
     state={
         productData:[],
         searchText:'',
-        addedProductToCart:[]
+        addedProductToCart:[],
+        cartData:[]
     }
     componentDidMount(){
         fetch('https://fakestoreapi.com/products')
@@ -18,30 +19,43 @@ class Home extends React.Component {
             .then(json=>{
                 this.setState({productData:json})
             })
-    }
-    addtoCart=(product)=>{
-        let addedProductToCart=this.state.addedProductToCart
-        addedProductToCart.push(product)
-        window.localStorage.setItem('productInCart',JSON.stringify(addedProductToCart))
-        this.setState({addedProductToCart})
-        message.success('Your selected item is successfully added in cart!');
-        Axios.post(constants.url.carts,{
-            user:JSON.parse(window.localStorage.getItem('user')).id
+        Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
+        .then((response)=>{
+            if(response.data){
+                this.setState({cartData:response.data})
+            }
         })
     }
-    // addProduct=()=>{
-    //     let product_data=[]
-    //     product_data.push({
-    //         id:this.state.id,
-    //         title:this.state.title,
-    //         image:this.state.image,
-    //         price:this.state.price
+    // addtoCart=(product)=>{
+    //     let addedProductToCart=this.state.addedProductToCart
+    //     addedProductToCart.push(product)
+    //     window.localStorage.setItem('productInCart',JSON.stringify(addedProductToCart))
+    //     this.setState({addedProductToCart})
+    //     message.success('Your selected item is successfully added in cart!');
+    //     Axios.post(constants.url.carts,{
+    //         user:JSON.parse(window.localStorage.getItem('user')).id
     //     })
     // }
+    addtoCart=(data)=>{
+        let product_data={
+            id:data.id,
+            title:data.title,
+            image:data.image,
+            price:data.price
+        }
+        Axios.post(constants.url.cart_items,{
+            products:product_data,
+            user:JSON.parse(window.localStorage.getItem('user')).id
+        }).then((res)=>{
+            console.log(res);
+        })
+        console.log(product_data);
+        
+    }
     render(){
         return (
             <React.Fragment>
-                <Header {...this.props} searchText={this.state.searchText} setSearchText={(data)=>this.setState({searchText:data})} cartCount={this.state.addedProductToCart.length} />
+                <Header {...this.props} searchText={this.state.searchText} setSearchText={(data)=>this.setState({searchText:data})} cartCount={this.state.cartData.length} />
                 <div className="home">
                     <div className="home_container">
                         <img className="home_image" src="Images/header.png" alt="header_image" />
