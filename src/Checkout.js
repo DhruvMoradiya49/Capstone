@@ -46,10 +46,10 @@ class Checkout extends React.Component {
             })
         }
     }
-    removeItem=(id)=>{
+    removeItem=(id,name)=>{
         Axios.delete(constants.url.cart_items+"/"+id)
         .then((res)=>{
-            message.success('Your cart is successfully cleared!');
+            message.success(`${name} is removed from your Cart!`);
             this.getCartData()
         })
         // let cartItem=this.state.cartItem.filter((d)=>d.id!=id)
@@ -84,7 +84,7 @@ class Checkout extends React.Component {
                                         <small>$</small>
                                         <strong>{data.products.price}</strong>
                                     </p>
-                                    <button style={{cursor:'pointer'}} onClick={()=>this.removeItem(data.id)}>Remove from Cart</button>
+                                    <button style={{cursor:'pointer'}} onClick={()=>this.removeItem(data.id,data.products.title)}>Remove from Cart</button>
                                 </div>
                             </div>
                         ))}
