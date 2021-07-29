@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import "./Login.css";
 import { Link } from "react-router-dom";
-import { auth } from "./firebase";
 import {message} from 'antd'
 import Axios from 'axios';
 import constants from './constants';
