@@ -6,9 +6,5 @@
   padding: 10px;
   font-size: 16px;
   margin-top: 20px;
-  bottom: 0;
-  position: relative;
-  width: 100%;
-  left: 0;
-  right: 0;
+  height: 45px;
 }
