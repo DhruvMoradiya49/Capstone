@@ -5,6 +5,7 @@ import Header from './Header';
 import {message} from 'antd';
 import Axios from 'axios';
 import constants from './constants';
+import Footer from './Footer';
 
 class Checkout extends React.Component {
     state={
@@ -93,6 +94,7 @@ class Checkout extends React.Component {
                         <Subtotal cartCount={this.state.cartItem.length} totalAmount={this.state.totalAmount.toFixed(2)} />
                     </div>
                 </div>
+                <Footer />
             </React.Fragment>
         )
     }

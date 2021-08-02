@@ -5,6 +5,7 @@ import Product from "./Product";
 import {message} from 'antd'
 import Axios from 'axios';
 import constants from './constants';
+import Footer from './Footer';
 
 class Home extends React.Component {
     state={
@@ -72,6 +73,7 @@ class Home extends React.Component {
                         </div>
                     </div>
                 </div>
+                <Footer />
             </React.Fragment>
         );
     }
