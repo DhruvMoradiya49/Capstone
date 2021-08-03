@@ -24,12 +24,14 @@ class Home extends React.Component {
             .then(json=>{
                 this.setState({productData:json})
             })
-        Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
-        .then((response)=>{
-            if(response.data){
-                this.setState({cartData:response.data})
+            if(window.localStorage.getItem('user')) {
+                Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
+                .then((response)=>{
+                    if(response.data){
+                        this.setState({cartData:response.data})
+                    }
+                })
             }
-        })
     }
     // addtoCart=(product)=>{
     //     let addedProductToCart=this.state.addedProductToCart

@@ -9,7 +9,7 @@ class Header extends React.Component {
     logout=()=>{
         window.localStorage.removeItem('user')
         window.localStorage.removeItem('token')
-        this.props.history.push('/login')
+        // this.props.history.push('/login')
     }
     render(){
         return (

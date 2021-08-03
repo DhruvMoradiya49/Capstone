@@ -25,7 +25,8 @@ class Checkout extends React.Component {
         this.getCartData()
     }
     getCartData=()=>{
-        Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
+        if(window.localStorage.getItem('user')) {
+            Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
         .then((response)=>{
             if(response.data){
                 let totalAmount=0
@@ -37,6 +38,8 @@ class Checkout extends React.Component {
                 this.setState({ totalAmount })
             }
         })
+        }
+        
     }
     clearCart=()=>{
         for(const data of this.state.cartItem){
@@ -76,7 +79,9 @@ class Checkout extends React.Component {
                             <h2 className="checkout_title">Your shopping Cart</h2>
                             {/* <div style={{marginRight:'30px',cursor:'pointer',color:'red'}} onClick={()=>this.clearCart()}>Clear Cart</div> */}
                         </div>
-                        {this.state.cartItem.map((data,index)=>(
+                        {this.state.cartItem.length > 0 ? (
+                            <>
+                            {this.state.cartItem.map((data,index)=>(
                             <div className = 'checkoutProduct' key={index}>
                                 <img className="checkoutProduct_image" src={data.products.image} />
                                 <div className="checkoutProduct_info">
@@ -89,6 +94,13 @@ class Checkout extends React.Component {
                                 </div>
                             </div>
                         ))}
+                            </>
+                        ) : (
+                            <div>
+                                <button className="login_signInButton" onClick={() => this.props.history.push('/login')}>Sign In</button>
+                            </div>
+                        )}
+                        
                     </div>
                     <div className="checkout_right">
                         <Subtotal cartCount={this.state.cartItem.length} totalAmount={this.state.totalAmount.toFixed(2)} />
