@@ -25,8 +25,9 @@ class Home extends React.Component {
                 this.setState({productData:json})
             })
             if(window.localStorage.getItem('user')) {
+                const token = localStorage.getItem('token')
                 Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`,
-                {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
+                {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
                 .then((response)=>{
                     if(response.data){
                         this.setState({cartData:response.data})
@@ -51,11 +52,12 @@ class Home extends React.Component {
             image:data.image,
             price:data.price
         }
+        const token = localStorage.getItem('token')
         Axios.post(constants.url.cart_items,{
             products:product_data,
             user:JSON.parse(window.localStorage.getItem('user')).id
         },
-        {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}}).then((res)=>{
+        {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}}).then((res)=>{
             console.log(res);
             this.getProductAndCart()
             message.success(`${data.title} is added in Cart!`)

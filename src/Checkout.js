@@ -26,8 +26,9 @@ class Checkout extends React.Component {
     }
     getCartData=()=>{
         if(window.localStorage.getItem('user')) {
+            const token = localStorage.getItem('token')
             Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`, 
-            {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
+            {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
         .then((response)=>{
             if(response.data){
                 let totalAmount=0
@@ -44,8 +45,9 @@ class Checkout extends React.Component {
     }
     clearCart=()=>{
         for(const data of this.state.cartItem){
+            const token = localStorage.getItem('token')
             Axios.delete(constants.url.cart_items+"/"+data.id,
-            {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
+            {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
             .then((res)=>{
                 message.success('Your cart is successfully cleared!');
                 this.getCartData()
@@ -53,8 +55,9 @@ class Checkout extends React.Component {
         }
     }
     removeItem=(id,name)=>{
+        const token = localStorage.getItem('token')
         Axios.delete(constants.url.cart_items+"/"+id,
-        {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
+        {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
         .then((res)=>{
             message.success(`${name} is removed from your Cart!`);
             this.getCartData()

@@ -47,12 +47,13 @@ class Login extends React.Component {
             if (response.data.length === 0) {
                 message.error("Somthing went wrong")
             } else {
+                const token = localStorage.getItem('token')
                 message.success('Record successfully added')
                 Axios.post(constants.url.cart_items,{
                     user:response.data.id,
                     products:[]
                 },
-                {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
+                {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
             }
             this.setState({
                 email:'',
