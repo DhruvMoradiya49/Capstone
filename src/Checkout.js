@@ -26,7 +26,8 @@ class Checkout extends React.Component {
     }
     getCartData=()=>{
         if(window.localStorage.getItem('user')) {
-            Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`)
+            Axios.get(`${constants.url.cart_items}?user_eq=${JSON.parse(window.localStorage.getItem('user')).id}`, 
+            {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
         .then((response)=>{
             if(response.data){
                 let totalAmount=0
@@ -43,7 +44,8 @@ class Checkout extends React.Component {
     }
     clearCart=()=>{
         for(const data of this.state.cartItem){
-            Axios.delete(constants.url.cart_items+"/"+data.id)
+            Axios.delete(constants.url.cart_items+"/"+data.id,
+            {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
             .then((res)=>{
                 message.success('Your cart is successfully cleared!');
                 this.getCartData()
@@ -51,7 +53,8 @@ class Checkout extends React.Component {
         }
     }
     removeItem=(id,name)=>{
-        Axios.delete(constants.url.cart_items+"/"+id)
+        Axios.delete(constants.url.cart_items+"/"+id,
+        {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
         .then((res)=>{
             message.success(`${name} is removed from your Cart!`);
             this.getCartData()

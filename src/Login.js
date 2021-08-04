@@ -51,7 +51,8 @@ class Login extends React.Component {
                 Axios.post(constants.url.cart_items,{
                     user:response.data.id,
                     products:[]
-                })
+                },
+                {headers: {Authorization : `Bearer ${localStorage.getItem('token')}`}})
             }
             this.setState({
                 email:'',
