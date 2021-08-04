@@ -1,4 +1,4 @@
-const host = "http://localhost:1337";
+const host = "https://mobiant-api.herokuapp.com";
 const constants = {
     url: {
         host: `${host}`,
