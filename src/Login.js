@@ -46,15 +46,16 @@ class Login extends React.Component {
         }).then((response) => {
             if (response.data.length === 0) {
                 message.error("Somthing went wrong")
-            } else {
-                const token = localStorage.getItem('token')
-                message.success('Record successfully added')
-                Axios.post(constants.url.cart_items,{
-                    user:response.data.id,
-                    products:[]
-                },
-                )
-            }
+            } 
+            // else {
+            //     const token = localStorage.getItem('token')
+            //     message.success('Record successfully added')
+                // Axios.post(constants.url.cart_items,{
+                //     user:response.data.id,
+                //     products:[]
+                // },
+                // )
+            // }
             this.setState({
                 email:'',
                 username:'',
