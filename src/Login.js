@@ -53,7 +53,7 @@ class Login extends React.Component {
                     user:response.data.id,
                     products:[]
                 },
-                {headers: {Authorization : `Bearer ${token.substring(1,token.length - 1)}`}})
+                )
             }
             this.setState({
                 email:'',
